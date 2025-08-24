@@ -1,0 +1,35 @@
+{
+  "name": "code-intel-engine",
+  "version": "1.0.0",
+  "description": "Intelligent Codebase Analyzer & Documentation Generator",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "schedule": "node scheduler/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "code-analysis",
+    "documentation",
+    "llm"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/parser": "^7.28.3",
+    "@babel/traverse": "^7.28.3",
+    "@babel/types": "^7.28.2",
+    "adm-zip": "^0.5.16",
+    "fs-extra": "^11.1.1",
+    "simple-git": "^3.28.0",
+    "tree-sitter": "^0.25.0",
+    "tree-sitter-cli": "^0.25.8",
+    "tree-sitter-cpp": "^0.23.4",
+    "tree-sitter-css": "^0.23.2",
+    "tree-sitter-html": "^0.23.2",
+    "tree-sitter-java": "^0.23.5",
+    "tree-sitter-javascript": "^0.23.1",
+    "tree-sitter-python": "^0.23.6"
+  },
+  "type": "commonjs"
+}
