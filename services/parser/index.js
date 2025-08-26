@@ -14,19 +14,19 @@ const Css = require('tree-sitter-css');
 const config = require('../../config/config.json');
 const PARSED_OUTPUT = path.join(__dirname, '../../', config.tempDir, 'parsed.json');
 
-// Map extensions to parsers
 const languageMap = {
-  '.js': { parser: new Parser(), lang: JavaScript, babel: true },
-  '.jsx': { parser: new Parser(), lang: JavaScript, babel: true, plugins: ['jsx'] },
-  '.ts': { parser: new Parser(), lang: JavaScript, babel: true, plugins: ['typescript'] },
-  '.tsx': { parser: new Parser(), lang: JavaScript, babel: true, plugins: ['typescript', 'jsx'] },
-  '.py': { parser: new Parser(), lang: Python },
-  '.java': { parser: new Parser(), lang: Java },
-  '.cpp': { parser: new Parser(), lang: Cpp },
-  '.hpp': { parser: new Parser(), lang: Cpp },
-  '.html': { parser: new Parser(), lang: Html },
-  '.css': { parser: new Parser(), lang: Css }
+  '.js': { parser: new Parser(), lang: JavaScript, langName: 'javascript', babel: true },
+  '.jsx': { parser: new Parser(), lang: JavaScript, langName: 'javascript', babel: true, plugins: ['jsx'] },
+  '.ts': { parser: new Parser(), lang: JavaScript, langName: 'javascript', babel: true, plugins: ['typescript'] },
+  '.tsx': { parser: new Parser(), lang: JavaScript, langName: 'javascript', babel: true, plugins: ['typescript', 'jsx'] },
+  '.py': { parser: new Parser(), lang: Python, langName: 'python' },
+  '.java': { parser: new Parser(), lang: Java, langName: 'java' },
+  '.cpp': { parser: new Parser(), lang: Cpp, langName: 'cpp' },
+  '.hpp': { parser: new Parser(), lang: Cpp, langName: 'cpp' },
+  '.html': { parser: new Parser(), lang: Html, langName: 'html' },
+  '.css': { parser: new Parser(), lang: Css, langName: 'css' }
 };
+
 
 /**
  * Initializes parsers for each language.
@@ -92,4 +92,4 @@ async function parseCodebase(dirPath) {
   return PARSED_OUTPUT;
 }
 
-module.exports = { parseCodebase };
+module.exports = { parseCodebase, languageMap };

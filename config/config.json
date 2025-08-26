@@ -1,9 +1,4 @@
 {
-  "ollama": {
-    "url": "https://holista-openai.openai.azure.com/",
-    "apiKey": "9fvH1lRcxGlhnLAQus8nEyGAjgCXDW84BcTDthN6hdpN30IJxwwnJQQJ99BHACPV0roXJ3w3AAABACOGkneD",
-    "model": "AUTODETECT"
-  },
   "azureOpenAI": {
     "endpoint": "https://holista-openai.openai.azure.com/",
     "apiKey": "9fvH1lRcxGlhnLAQus8nEyGAjgCXDW84BcTDthN6hdpN30IJxwwnJQQJ99BHACPV0roXJ3w3AAABACOGkneD",
