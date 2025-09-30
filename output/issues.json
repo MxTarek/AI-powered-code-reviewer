@@ -1,0 +1,441 @@
+{
+  ".prettier.config.js": [
+    {
+      "type": "best-practice",
+      "description": "Omitting semicolons (semi: false) can sometimes lead to unexpected ASI (Automatic Semicolon Insertion) pitfalls in JavaScript, especially in complex codebases.",
+      "line": 2,
+      "suggestion": "Consider setting 'semi: true' to improve code clarity and avoid potential ASI issues."
+    },
+    {
+      "type": "best-practice",
+      "description": "Using 'trailingComma: all' can produce trailing commas in all possible places, including function parameters, which may cause compatibility issues with older environments.",
+      "line": 4,
+      "suggestion": "Ensure your target environment supports trailing commas in all positions, or consider using 'es5' to limit trailing commas to places supported by ES5."
+    }
+  ],
+  "eslint.config.js": [
+    {
+      "type": "best-practice",
+      "description": "The first config object with only a 'files' pattern does not specify any rules or settings, making it effectively a no-op or potentially confusing.",
+      "line": 6,
+      "suggestion": "Either remove the empty config object or add relevant rules/settings to it."
+    },
+    {
+      "type": "best-practice",
+      "description": "The second config object sets 'languageOptions.globals' to 'globals.node' without scoping it to specific files, which may unintentionally apply Node.js globals to all files including non-Node environments.",
+      "line": 7,
+      "suggestion": "Scope Node.js globals only to relevant files, e.g., by adding a 'files' pattern like '**/*.js' or '**/*.ts' that run in Node environment."
+    },
+    {
+      "type": "bug",
+      "description": "'tseslint.configs.recommended' is spread as an array, but if it is actually an object, using spread operator will cause an error or unexpected behavior.",
+      "line": 9,
+      "suggestion": "Verify that 'tseslint.configs.recommended' is an array before spreading; if it is an object, include it directly without spreading."
+    },
+    {
+      "type": "best-practice",
+      "description": "Importing 'typescript-eslint' as 'tseslint' may be incorrect since the official package is '@typescript-eslint/eslint-plugin' or '@typescript-eslint/parser', and 'typescript-eslint' package might not export configs properly.",
+      "line": 3,
+      "suggestion": "Confirm the correct package and import path for TypeScript ESLint and import from '@typescript-eslint/eslint-plugin' or relevant package with correct config usage."
+    }
+  ],
+  "public\\test.html": [],
+  "src\\app.test.ts": [
+    {
+      "type": "bug",
+      "description": "writeFileSync called with content as encoding parameter instead of data content, resulting in writing the string 'utf-8' to the file instead of actual HTML content.",
+      "line": 21,
+      "suggestion": "Change writeFileSync(join(tmpDir, file), 'utf-8') to writeFileSync(join(tmpDir, file), '<html></html>') or actual HTML content."
+    },
+    {
+      "type": "best-practice",
+      "description": "Using a global port acquired via getPort without retry or handling potential conflicts might cause flaky tests if port is taken between acquisition and listen.",
+      "line": 17,
+      "suggestion": "Consider acquiring port and starting server within the test lifecycle or retry logic to reduce flakiness."
+    },
+    {
+      "type": "best-practice",
+      "description": "The temporary directory created by temporaryDirectory() is never explicitly cleaned up, potentially causing resource accumulation.",
+      "line": 19,
+      "suggestion": "Use test lifecycle hooks to clean up temporary directories after tests or use tempy methods that auto-cleanup to avoid resource leaks."
+    },
+    {
+      "type": "best-practice",
+      "description": "The server is closed in test.after, but if tests fail before server start, server.close might not be called, causing hanging processes.",
+      "line": 34,
+      "suggestion": "Ensure server is closed in all cases, possibly by using a dedicated teardown hook or wrapping server lifecycle in a try/finally block."
+    },
+    {
+      "type": "performance",
+      "description": "All test cases run sequentially with await inside a for loop, causing longer total test runtime.",
+      "line": 92,
+      "suggestion": "Consider running subtests in parallel using Promise.all or test.parallel if supported, to reduce total test execution time."
+    },
+    {
+      "type": "security",
+      "description": "Static files served from a temporary directory with minimal content and no sanitization; if createApp serves static files without proper validation, it could be vulnerable to path traversal attacks.",
+      "line": 25,
+      "suggestion": "Verify that static file serving in createApp properly sanitizes and restricts file access to prevent directory traversal or unauthorized file access."
+    },
+    {
+      "type": "best-practice",
+      "description": "Type HTTPMethods is defined inline; consider reusing or importing from a shared type definition to improve maintainability.",
+      "line": 13,
+      "suggestion": "Extract HTTPMethods type to a shared module or reuse existing type definitions."
+    }
+  ],
+  "src\\app.ts": [
+    {
+      "type": "security",
+      "description": "CORS middleware dynamically sets allowedHeaders based on request headers without validation, potentially allowing unsafe headers and increasing security risks.",
+      "line": 37,
+      "suggestion": "Whitelist allowed headers explicitly instead of reflecting the request headers dynamically to prevent abuse."
+    },
+    {
+      "type": "best-practice",
+      "description": "Using 'next?.()' to invoke next middleware silently ignores errors and may cause unhandled cases if next is not defined or errors occur.",
+      "line": 56,
+      "suggestion": "Ensure 'next' is always defined for middleware or handle errors explicitly. Avoid optional chaining on next and add error handling middleware."
+    },
+    {
+      "type": "performance",
+      "description": "Static file serving uses sirv middleware with 'dev' mode toggled by NODE_ENV. However, static directories from options.static are processed with map and forEach separately, potentially causing redundant app.use calls.",
+      "line": 30,
+      "suggestion": "Combine static directories and apply sirv middleware once per directory in a single loop or batch to improve clarity and performance."
+    },
+    {
+      "type": "bug",
+      "description": "The query parameter parsing converts certain keys to integers but does not handle invalid integer values robustly, which might cause unexpected filtering or errors.",
+      "line": 51,
+      "suggestion": "Add explicit validation to ensure parsed integers are valid and fall back or reject invalid values instead of silently filtering with Number.isNaN."
+    },
+    {
+      "type": "best-practice",
+      "description": "The body parser middleware from 'milliparsec' is used with a TypeScript expect-error comment, indicating potential type incompatibility or lack of type declarations.",
+      "line": 42,
+      "suggestion": "Use a body parser with proper types or provide type declarations to avoid suppressing type errors, improving maintainability."
+    },
+    {
+      "type": "security",
+      "description": "No validation or sanitization exists on route parameters 'name' and 'id', which might lead to injection attacks if 'Service' methods don't handle sanitization internally.",
+      "line": 54,
+      "suggestion": "Validate and sanitize route parameters before using them in service calls to prevent injection or other malicious inputs."
+    },
+    {
+      "type": "best-practice",
+      "description": "The endpoint design uses generic ':name' and ':id' parameters without explicit route separation or validation, increasing risk of route conflicts or unexpected behavior.",
+      "line": 53,
+      "suggestion": "Define explicit routes or validate 'name' against allowed resource names to avoid conflicts and improve API clarity."
+    },
+    {
+      "type": "performance",
+      "description": "Eta template engine is configured with caching only in production, which may cause performance issues during development due to lack of caching.",
+      "line": 21,
+      "suggestion": "Consider enabling partial caching or other performance enhancements in development for faster feedback loops."
+    },
+    {
+      "type": "best-practice",
+      "description": "Response handling middleware at the end checks for data presence and returns 404 or JSON, but status 201 for POST is only set without ending the response explicitly.",
+      "line": 97,
+      "suggestion": "Use 'res.status(201).json(data)' to set status and send response in one call for clarity and correctness."
+    }
+  ],
+  "src\\bin.ts": [
+    {
+      "type": "best-practice",
+      "description": "Parsing port as string then calling parseInt without validating can lead to NaN if invalid input is provided.",
+      "line": 58,
+      "suggestion": "Validate that port is a number after parseInt and fallback to default or exit with an error if invalid."
+    },
+    {
+      "type": "performance",
+      "description": "Reading the entire file twice synchronously: once to check if empty and once more during adapter creation (LowDB reads again).",
+      "line": 68,
+      "suggestion": "Avoid reading the file twice by reading once, checking content, and then reusing or passing content to adapter if supported."
+    },
+    {
+      "type": "security",
+      "description": "No validation or sanitization of the 'file' positional argument, which could lead to path traversal or loading unintended files.",
+      "line": 59,
+      "suggestion": "Sanitize and validate 'file' argument to restrict to expected directories or file types; consider resolving to absolute paths safely."
+    },
+    {
+      "type": "best-practice",
+      "description": "Deprecated --watch option is still processed, but the app watches file changes always in development mode without explicit opt-in.",
+      "line": 52,
+      "suggestion": "Remove deprecated --watch option entirely or unify watch behavior with clear documentation and possibly a config option."
+    },
+    {
+      "type": "best-practice",
+      "description": "No error handling around database reading and writing except for JSON syntax errors during file watch reload.",
+      "line": 111,
+      "suggestion": "Add more comprehensive error handling around db.read() and db.write() to handle I/O or permission errors gracefully."
+    },
+    {
+      "type": "performance",
+      "description": "'randomItem' returns empty string if items array is empty, which might hide issues silently.",
+      "line": 97,
+      "suggestion": "Add a check for empty array and handle it explicitly or throw an error to catch unexpected empty states."
+    },
+    {
+      "type": "best-practice",
+      "description": "Hardcoded URLs in logs use 'localhost' instead of the resolved host parameter.",
+      "line": 102,
+      "suggestion": "Use the 'host' variable instead of 'localhost' when logging URLs to reflect actual binding address."
+    },
+    {
+      "type": "performance",
+      "description": "Using 'watch' in development mode to reload on file changes may cause repeated db.read() calls; no debouncing implemented.",
+      "line": 121,
+      "suggestion": "Implement debouncing or throttling on file change events to avoid excessive reloads on rapid file modifications."
+    },
+    {
+      "type": "security",
+      "description": "Static files directories passed from CLI arguments are not validated or sanitized, potentially exposing unintended filesystem areas.",
+      "line": 57,
+      "suggestion": "Validate and sanitize static directory paths to restrict serving only from intended safe directories."
+    },
+    {
+      "type": "best-practice",
+      "description": "Using process.exit() abruptly can prevent asynchronous cleanup; also inconsistent exit codes on help and version display.",
+      "line": 44,
+      "suggestion": "Use graceful shutdown or return process.exitCode with clean exits; standardize exit codes (0 for help/version, >0 for errors)."
+    }
+  ],
+  "src\\observer.ts": [
+    {
+      "type": "best-practice",
+      "description": "Using function expressions for event handlers can lead to less clear code and potential issues with context binding.",
+      "line": 6,
+      "suggestion": "Define event handler methods as proper class methods or use arrow functions to maintain lexical `this` and improve readability."
+    },
+    {
+      "type": "best-practice",
+      "description": "The event handlers have default no-op implementations but no way to register or override them externally in a clear or type-safe manner.",
+      "line": 6,
+      "suggestion": "Provide explicit methods or constructor options to register event callbacks, or use an event emitter pattern for better extensibility."
+    },
+    {
+      "type": "performance",
+      "description": "Observer methods `onReadStart`, `onReadEnd`, `onWriteStart`, `onWriteEnd` are synchronous, but the read/write operations are async. If any event handlers become asynchronous, this could cause silent errors or unexpected behavior.",
+      "line": 7,
+      "suggestion": "Consider supporting async event handlers and `await` them in the `read` and `write` methods to ensure correct sequencing."
+    },
+    {
+      "type": "best-practice",
+      "description": "The private field `#adapter` is assigned but never validated. If a null or invalid adapter is passed, it will cause runtime errors.",
+      "line": 14,
+      "suggestion": "Add validation in the constructor to ensure the adapter implements expected methods (`read` and `write`)."
+    },
+    {
+      "type": "best-practice",
+      "description": "The class does not handle or propagate errors from the adapter read/write operations, potentially hiding failures and making debugging harder.",
+      "line": 18,
+      "suggestion": "Add try-catch blocks around adapter calls to handle or rethrow errors, possibly adding error event hooks for observers."
+    },
+    {
+      "type": "performance",
+      "description": "The `write` method does not return anything, which may be inconsistent with `read` returning data. This could lead to confusion for consumers.",
+      "line": 24,
+      "suggestion": "Return a result or confirmation from `write` or explicitly document that it returns void to clarify API behavior."
+    }
+  ],
+  "src\\service.test.ts": [
+    {
+      "type": "best-practice",
+      "description": "Using a single shared 'adapter' instance across tests may cause state leakage between tests, compromising test isolation.",
+      "line": 9,
+      "suggestion": "Instantiate a new Memory adapter and Lowdb instance inside each test or in a beforeEach hook to ensure clean state per test."
+    },
+    {
+      "type": "performance",
+      "description": "'reset' function uses structuredClone on a simple object each time; although safe, repeated deep cloning could be optimized.",
+      "line": 42,
+      "suggestion": "Consider simpler copying (e.g. shallow clone) or resetting db.data to a fresh literal if deep cloning is not required."
+    },
+    {
+      "type": "best-practice",
+      "description": "The tests mix synchronous and async styles (some callbacks are async, others are not), which may cause inconsistent test behavior.",
+      "line": 45,
+      "suggestion": "Use consistent async/await or callback style in tests, especially when service methods return promises."
+    },
+    {
+      "type": "best-practice",
+      "description": "Some tests mutate global db.data directly, potentially causing side effects if tests run in parallel.",
+      "line": 114,
+      "suggestion": "Reset or re-instantiate db and service objects per test case or use hooks to isolate test state."
+    },
+    {
+      "type": "bug",
+      "description": "In the pagination tests, page 3 returns same data as page 2, which is unexpected and may indicate incorrect pagination logic or test expectations.",
+      "line": 146,
+      "suggestion": "Verify pagination logic and fix either the service implementation or test expectations so that page 3 returns empty data if out of bounds."
+    },
+    {
+      "type": "best-practice",
+      "description": "Test data contains hardcoded IDs as strings; if service mutates or auto-generates IDs, tests may become brittle.",
+      "line": 16,
+      "suggestion": "Use factory functions to generate test data with unique IDs or mock ID generation to avoid hardcoded dependencies."
+    },
+    {
+      "type": "security",
+      "description": "The test cases do not validate input sanitization or resilience against injection-like attacks on query parameters (e.g., '_sort' or filter params).",
+      "line": 100,
+      "suggestion": "Add tests for injection or malformed params to ensure service handles them safely."
+    },
+    {
+      "type": "best-practice",
+      "description": "Multiple test cases use string conversions of numbers (e.g., views_lt: post1.views.toString()), which might obscure type expectations.",
+      "line": 92,
+      "suggestion": "Ensure service input parsing is clear and consider passing params with correct types to avoid implicit conversions."
+    },
+    {
+      "type": "performance",
+      "description": "The 'find' test suite runs a large number of sub-tests sequentially, which may increase test runtime significantly.",
+      "line": 70,
+      "suggestion": "Group related test cases or use data-driven testing to reduce overhead and improve test clarity."
+    },
+    {
+      "type": "best-practice",
+      "description": "Some tests check for undefined returns but do not assert thrown errors or edge case handling explicitly.",
+      "line": 195,
+      "suggestion": "Add explicit error or edge case tests to verify service robustness and clear failure modes."
+    }
+  ],
+  "src\\service.ts": [
+    {
+      "type": "best-practice",
+      "description": "The isItem type guard only checks for non-null object but does not exclude arrays, functions, or special objects, which might lead to false positives.",
+      "line": 10,
+      "suggestion": "Enhance isItem to exclude arrays and other non-plain objects, e.g., return typeof obj === 'object' && obj !== null && !Array.isArray(obj)."
+    },
+    {
+      "type": "performance",
+      "description": "In embed(), inflection.singularize and pluralize are called multiple times for the same strings, potentially impacting performance.",
+      "line": 33,
+      "suggestion": "Cache the results of inflection.singularize(name) and inflection.pluralize(related) within the function to avoid repeated computation."
+    },
+    {
+      "type": "bug",
+      "description": "In deleteDependents(), the comment says 'Delete if foreign key is null' but the code filters items where foreignKey !== null, effectively keeping items with non-null foreignKeys instead of deleting dependents linked by foreign key.",
+      "line": 59,
+      "suggestion": "Change filter condition to items.filter(item => item[foreignKey] === null) if the goal is to delete dependents with null foreign keys, or clarify the intended logic."
+    },
+    {
+      "type": "security",
+      "description": "The randomId function generates only 4 hex characters (2 bytes), which is a very small space (~65k IDs), increasing collision risk in larger datasets.",
+      "line": 66,
+      "suggestion": "Increase randomBytes size (e.g., 8 bytes) to ensure stronger uniqueness and reduce collision probability."
+    },
+    {
+      "type": "best-practice",
+      "description": "In fixItemsIds(), if item['id'] is undefined, it assigns a new randomId without checking for collisions in existing items.",
+      "line": 69,
+      "suggestion": "Add a check to ensure generated IDs are unique within the current items before assignment."
+    },
+    {
+      "type": "best-practice",
+      "description": "In find(), the parsing of numeric conditions uses parseInt without radix and does not handle invalid number inputs.",
+      "line": 123,
+      "suggestion": "Use parseInt(paramValue, 10) and validate the result (e.g., with isNaN) before comparing to avoid unexpected behavior."
+    },
+    {
+      "type": "bug",
+      "description": "In find(), for boolean comparisons the code converts 'true' to boolean but does not handle 'false' or other boolean string variations robustly.",
+      "line": 140,
+      "suggestion": "Improve boolean parsing to explicitly handle 'true' and 'false' strings and default/fallback cases."
+    },
+    {
+      "type": "performance",
+      "description": "In find(), sorting with sortOn is performed on the entire filtered dataset even if pagination parameters (_start, _limit, _page) are used; could be optimized by sorting only the required slice or indexing.",
+      "line": 153,
+      "suggestion": "Consider optimizing sorting and slicing by applying pagination before sorting if possible, or implement indexing for large datasets."
+    },
+    {
+      "type": "bug",
+      "description": "In find(), if _page is provided but _per_page is 0 or negative, it can cause division by zero or incorrect pagination.",
+      "line": 169,
+      "suggestion": "Validate _per_page to be positive integer and provide a reasonable default if invalid."
+    },
+    {
+      "type": "best-practice",
+      "description": "In #updateOrPatch(), the assignment this.#db.data[name] = isPatch ? { item, ...body } : body is incorrect because 'item' is an array or undefined, causing unexpected structure.",
+      "line": 207,
+      "suggestion": "Correct this logic to update a singular item properly, likely by searching for the item to update or restricting update to arrays only."
+    },
+    {
+      "type": "best-practice",
+      "description": "Methods like update, patch, updateById, patchById rely on private methods that do not validate inputs or check for existence robustly.",
+      "line": 217,
+      "suggestion": "Add input validation and error handling to provide clearer failure modes and avoid silent failures."
+    },
+    {
+      "type": "security",
+      "description": "The code uses dot-prop's getProperty without sanitizing or restricting keys, which might lead to prototype pollution or access to unexpected properties.",
+      "line": 134,
+      "suggestion": "Validate or sanitize query keys before using them with getProperty to avoid security risks."
+    },
+    {
+      "type": "best-practice",
+      "description": "In nullifyForeignKey(), setting foreign keys to null could break referential integrity silently without transactional safety.",
+      "line": 48,
+      "suggestion": "Consider adding transactional mechanisms or consistent error handling when nullifying foreign keys to avoid inconsistent states."
+    },
+    {
+      "type": "best-practice",
+      "description": "The class Service does not expose a method to persist changes explicitly before or after multiple operations, relying on await this.#db.write() in each mutating method, which may impact performance.",
+      "line": 195,
+      "suggestion": "Consider batching writes or exposing explicit save methods to improve performance on bulk operations."
+    }
+  ],
+  "views\\index.html": [
+    {
+      "type": "performance",
+      "description": "The <ul> element is rendered inside the loop for each resource, resulting in multiple separate lists instead of a single list with multiple <li> items.",
+      "line": 37,
+      "suggestion": "Move the <ul> outside the loop to wrap all <li> items, improving semantic HTML and reducing unnecessary multiple lists."
+    },
+    {
+      "type": "security",
+      "description": "Unescaped user-generated data (it.data keys and values) are directly injected into HTML without escaping, which could lead to XSS if the data is untrusted.",
+      "line": 38,
+      "suggestion": "Sanitize or escape dynamic content before outputting, or ensure data is safe/trusted. Use proper escaping functions or template engine features to prevent XSS."
+    },
+    {
+      "type": "best-practice",
+      "description": "Empty <a> tags use href attributes without encoding, which could cause broken links or injection if resource names contain special characters.",
+      "line": 38,
+      "suggestion": "Encode URI components for href attributes using encodeURIComponent or equivalent to ensure valid URLs."
+    },
+    {
+      "type": "best-practice",
+      "description": "Using inline styles and internal CSS only; no external stylesheet or CSS classes for reusable styling.",
+      "line": 7,
+      "suggestion": "Consider extracting CSS into separate stylesheet files and using utility classes or frameworks (e.g., Tailwind) consistently for maintainability and caching benefits."
+    },
+    {
+      "type": "best-practice",
+      "description": "The presence of class names like 'my-12', 'bg-gradient-to-r', 'from-purple-500' suggests Tailwind CSS usage, but CSS is custom/internal which may cause conflicts or confusion.",
+      "line": 34,
+      "suggestion": "If Tailwind CSS is intended, use its utility classes consistently and avoid conflicting custom CSS; otherwise, remove unused class names for clarity."
+    },
+    {
+      "type": "best-practice",
+      "description": "The <span> element wrapping the item count is always rendered, but the count and label are conditionally rendered inside it, which can cause empty spans or inconsistent markup.",
+      "line": 41,
+      "suggestion": "Render the <span> only when the count is present to avoid empty or meaningless elements in the DOM."
+    },
+    {
+      "type": "best-practice",
+      "description": "The dark mode CSS block contains an empty 'a' selector with no styles defined, which is unnecessary.",
+      "line": 28,
+      "suggestion": "Remove the empty CSS rule or add appropriate dark mode styles for links to improve user experience."
+    },
+    {
+      "type": "best-practice",
+      "description": "Using <strong> inside <nav> as the site title may not be semantically ideal for accessibility or SEO.",
+      "line": 24,
+      "suggestion": "Use a heading tag (e.g., <h1> or <h2>) with appropriate ARIA roles or landmarks for better semantics and accessibility."
+    }
+  ]
+}
